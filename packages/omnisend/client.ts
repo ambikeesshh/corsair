@@ -109,6 +109,12 @@ export function baseUrlOf(ctx: OmnisendCallContext): string {
 			'Omnisend baseUrl must be an https URL (plain http only for localhost)',
 		);
 	}
+	// Routes are appended to the string: a query or fragment would swallow them.
+	if (url.search || url.hash || /[?#]/.test(configured)) {
+		throw new Error(
+			'Omnisend baseUrl must not have a query string or fragment',
+		);
+	}
 	return configured.replace(/\/+$/, '');
 }
 

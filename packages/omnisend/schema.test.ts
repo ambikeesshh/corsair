@@ -12,7 +12,7 @@ import {
 import { OMNISEND_OPERATION_IDS } from './endpoints/operation-types';
 
 const ids = omnisendOperations.map((operation) => operation.id);
-const OPERATION_COUNT = 108;
+const OPERATION_COUNT = 107;
 
 describe('omnisend-manifest.json', () => {
 	it('matches the manifest schema', () => {
@@ -145,7 +145,13 @@ describe('schemas', () => {
 			const parsed = getOmnisendOutputSchema(operation.id).safeParse({
 				__added_later__: { nested: true },
 			});
-			if (!parsed.success) failed.push(operation.id);
+			if (
+				!parsed.success ||
+				// `unknown` because the parsed page is checked for the one extra field.
+				(parsed.data as Record<string, unknown>).__added_later__ === undefined
+			) {
+				failed.push(operation.id);
+			}
 		}
 		expect(failed).toEqual([]);
 	});

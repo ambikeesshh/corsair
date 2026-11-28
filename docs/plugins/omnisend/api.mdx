@@ -12663,12 +12663,12 @@ await corsair.omnisend.api.automations.create({
       units: h | d | w
     },
     mode: once | interval
-  },
+  } | null,
   overlapLimiter?: {
     automationIDs: string[],
     mode: currentlyIn | recentlyIn,
     withinDays?: number
-  },
+  } | null,
   sendingThresholds?: {
     email: subscribed | nonSubscribed | all,
     sms: subscribed | nonSubscribed | all
@@ -60283,7 +60283,7 @@ Send test email. Send the saved email content of a specific email block as a tes
 await corsair.omnisend.api.automations.sendBlockTestEmail({
 	id: '6650a1b2c3d4e5f6a7b8c9d0',
 	blockID: 'block-1',
-	recipients: ['example'],
+	recipients: ['qa-inbox@example.com'],
 });
 ```
 
@@ -60447,7 +60447,7 @@ await corsair.omnisend.api.automations.update({ id: '6650a1b2c3d4e5f6a7b8c9d0' }
 |------|------|----------|-------------|
 | `id` | `string` | Yes | Automation workflow ID (24 character hexadecimal) |
 | `blocks` | `object[]` | No | Automation workflow blocks. Each entry updates an existing block matched by `id`; fields within each block are applied as a partial update. The array does **not** reshape the block list — adding or removing blocks is not supported through this endpoint (use the dedicated block endpoints for that). An empty array (`[]`) is rejected with `400`; omit the field to leave blocks unchanged. |
-| `exitConditions` | `object[]` | No | Exit condition list. Replaces all existing exit conditions when provided. Send `null` or an empty array (`[]`) to clear all exit conditions; omit to leave unchanged. |
+| `exitConditions` | `object[] \| null` | No | Exit condition list. Replaces all existing exit conditions when provided. Send `null` or an empty array (`[]`) to clear all exit conditions; omit to leave unchanged. |
 | `name` | `string` | No | Automation workflow name |
 | `settings` | `object` | No | Automation settings patch. Only provided sub-fields are updated. |
 | `trigger` | `object` | No | Trigger configuration. Only provided sub-fields are updated. |
@@ -60471,7 +60471,7 @@ await corsair.omnisend.api.automations.update({ id: '6650a1b2c3d4e5f6a7b8c9d0' }
       isSkipAllowed?: boolean,
       language?: string,
       preheader?: string,
-      replyToEmail?: string,
+      replyToEmail?: string | null,
       senderEmail?: string,
       senderName?: string,
       subject?: string
@@ -60479,8 +60479,8 @@ await corsair.omnisend.api.automations.update({ id: '6650a1b2c3d4e5f6a7b8c9d0' }
     sendPush?: {
       body?: string,
       clickUrl?: string,
-      iconID?: string,
-      imageID?: string,
+      iconID?: string | null,
+      imageID?: string | null,
       isSkipAllowed?: boolean,
       title?: string
     },
@@ -60491,7 +60491,7 @@ await corsair.omnisend.api.automations.update({ id: '6650a1b2c3d4e5f6a7b8c9d0' }
         stopKeywordText?: string,
         unsubscribeLinkText?: string
       },
-      imageID?: string,
+      imageID?: string | null,
       isLinkShorteningEnabled?: boolean,
       isSkipAllowed?: boolean,
       message?: string
@@ -60553,7 +60553,7 @@ await corsair.omnisend.api.automations.update({ id: '6650a1b2c3d4e5f6a7b8c9d0' }
     logicalOperator: and | or
   },
   origin?: string
-}[]
+}[] | null
 ```
 </Accordion>
 
@@ -60567,12 +60567,12 @@ await corsair.omnisend.api.automations.update({ id: '6650a1b2c3d4e5f6a7b8c9d0' }
       units: h | d | w
     },
     mode: once | interval
-  },
+  } | null,
   overlapLimiter?: {
     automationIDs: string[],
     mode: currentlyIn | recentlyIn,
     withinDays?: number
-  },
+  } | null,
   sendingThresholds?: {
     email: subscribed | nonSubscribed | all,
     sms: subscribed | nonSubscribed | all
@@ -60592,7 +60592,7 @@ await corsair.omnisend.api.automations.update({ id: '6650a1b2c3d4e5f6a7b8c9d0' }
       value: string
     }[],
     logicalOperator: and | or
-  },
+  } | null,
   condition?: {
     event: string,
     filterGroups?: {
@@ -60610,7 +60610,7 @@ await corsair.omnisend.api.automations.update({ id: '6650a1b2c3d4e5f6a7b8c9d0' }
       amount: number,
       units: m | h | d | w
     }
-  }
+  } | null
 }
 ```
 </Accordion>
@@ -67839,39 +67839,6 @@ await corsair.omnisend.api.batches.listItems({ batchID: '6650a1b2c3d4e5f6a7b8c9d
 
 ## Brands
 
-### connect
-
-`brands.connect`
-
-Connect brand. With this endpoint you can connect your site to Omnisend. Note it's only possible to connect store with oAuth flow. Links the brand to an ecommerce platform; meant for platform apps.
-
-**Risk:** `write`
-
-```ts
-await corsair.omnisend.api.brands.connect({ platform: 'custom', version: '1', website: 'https://shop.example.com' });
-```
-
-**Input**
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `currency` | `string` | No | — |
-| `platform` | `string` | Yes | — |
-| `version` | `string` | Yes | — |
-| `website` | `string` | Yes | — |
-
-
-
-**Output**
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `success` | `true` | Yes | Omnisend accepted the call; it answered with no body. |
-
-
-
----
-
 ### getCurrent
 
 `brands.getCurrent`
@@ -68935,7 +68902,7 @@ Render a campaign and email it to 1-5 addresses. Omnisend sends to exactly the a
 ```ts
 await corsair.omnisend.api.campaigns.sendTestEmail({
 	id: '6650a1b2c3d4e5f6a7b8c9d0',
-	recipients: ['example'],
+	recipients: ['qa-inbox@example.com'],
 });
 ```
 
@@ -79645,8 +79612,7 @@ await corsair.omnisend.api.forms.listContacts({ formID: '6650a1b2c3d4e5f6a7b8c9d
   customProperties?: {
     name?: string | null,
     type?: string | null,
-    value?: {
-    } | null
+    value?: any | null
   }[] | null,
   discount?: string | null,
   email?: string | null,
@@ -85617,7 +85583,7 @@ Upload image file. With this endpoint you can upload an image file directly from
 
 ```ts
 await corsair.omnisend.api.images.upload({
-	file: { base64: 'SGVsbG8gZnJvbSBDb3JzYWly', filename: 'notes.txt', contentType: 'text/plain' },
+	file: { base64: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=', filename: 'pixel.png', contentType: 'image/png' },
 });
 ```
 
@@ -86371,36 +86337,131 @@ Create an email template. Omnisend requires name, generalSettings (with its 3 de
 await corsair.omnisend.api.templates.create({
 	name: 'Spring sale',
 	generalSettings: {
-		body: { backgroundColor: 'example' },
 		content: {
-			backgroundColor: 'example',
-			color: '#222222',
-			fontFamily: 'Arial',
+			backgroundColor: '#FFFFFF',
+			width: '600px',
+			fontFamily: 'Arial, sans-serif',
 			fontSize: '14px',
-			width: '100%',
+			color: '#212121',
 		},
+		logo: {
+			id: 'insertLogo.jpg',
+			source: '/image/newsletter/insertLogo.jpg',
+			width: 1200,
+			height: 536,
+		},
+		body: { backgroundColor: '#E3E5E8' },
 		buttonPresets: [{
-			id: '6650a1b2c3d4e5f6a7b8c9d0',
+			id: 'primary_button',
+			name: 'Primary button',
 			styles: {
-				borderRadius: '4px',
-				color: '#222222',
-				fontFamily: 'Arial',
-				fontSize: '14px',
+				backgroundColor: '#00A3FF',
+				borderRadius: '28px',
+				fontFamily: 'Arial, sans-serif',
+				fontSize: '16px',
+				color: '#FFFFFF',
+				paddingLeft: '16px',
+				paddingRight: '16px',
+				paddingTop: '16px',
+				paddingBottom: '16px',
+			},
+		}, {
+			id: 'secondary_button',
+			name: 'Secondary button',
+			styles: {
+				backgroundColor: '#FFFFFF',
+				border: '2px solid #000000',
+				borderRadius: '28px',
+				fontFamily: 'Arial, sans-serif',
+				fontSize: '16px',
+				color: '#000000',
+				paddingLeft: '16px',
+				paddingRight: '16px',
+				paddingTop: '16px',
+				paddingBottom: '16px',
+			},
+		}, {
+			id: 'tertiary_button',
+			name: 'Tertiary button',
+			styles: {
+				backgroundColor: '#000000',
+				border: '2px solid #FFFFFF',
+				borderRadius: '28px',
+				fontFamily: 'Arial, sans-serif',
+				fontSize: '16px',
+				color: '#FFFFFF',
+				paddingLeft: '16px',
+				paddingRight: '16px',
+				paddingTop: '16px',
+				paddingBottom: '16px',
 			},
 		}],
 		textPresets: [{
-			id: '6650a1b2c3d4e5f6a7b8c9d0',
+			id: 'heading_large',
+			name: 'Heading Large',
 			styles: {
-				color: '#222222',
-				fontFamily: 'Arial',
+				fontFamily: 'Arial, sans-serif',
+				fontSize: '48px',
+				color: '#000000',
+				lineHeight: '125%',
+			},
+		}, {
+			id: 'heading_medium',
+			name: 'Heading Medium',
+			styles: {
+				fontFamily: 'Arial, sans-serif',
+				fontSize: '36px',
+				color: '#000000',
+				lineHeight: '125%',
+			},
+		}, {
+			id: 'heading_small',
+			name: 'Heading Large',
+			styles: {
+				fontFamily: 'Arial, sans-serif',
+				fontSize: '30px',
+				color: '#000000',
+				lineHeight: '125%',
+			},
+		}, {
+			id: 'paragraph',
+			name: 'Paragraph',
+			styles: {
+				fontFamily: 'Arial, sans-serif',
 				fontSize: '14px',
-				lineHeight: 'example',
+				color: '#000000',
+				lineHeight: '150%',
+			},
+		}, {
+			id: 'footnote',
+			name: 'Footnote',
+			styles: {
+				fontFamily: 'Arial, sans-serif',
+				fontSize: '12px',
+				color: '#000000',
+				lineHeight: '150%',
 			},
 		}],
 	},
 	sections: [{
-		rows: [{}],
-		styleProperties: {},
+		rows: [{
+			columns: [{
+				width: '552px',
+				blocks: [{
+					type: 'htmlCode',
+					htmlCode: { style: '', body: '<p>Hello from Corsair</p>' },
+					styleProperties: { padding: '12px' },
+				}],
+			}],
+		}],
+		styleProperties: {
+			paddingLeft: '24px',
+			paddingRight: '24px',
+			paddingTop: '24px',
+			paddingBottom: '24px',
+			backgroundColor: '#FFFFFF',
+			verticalAlign: 'middle',
+		},
 	}],
 });
 ```
@@ -89616,45 +89677,140 @@ await corsair.omnisend.api.templates.render({ id: '6650a1b2c3d4e5f6a7b8c9d0' });
 
 `templates.replace`
 
-Replace an email template in full; omitted fields drop to their defaults. Takes the same full body as templates.create.
+Replace an email template in full. Takes the same body as templates.create: name, generalSettings with the default presets and at least one section.
 
 **Risk:** `write`
 
 ```ts
 await corsair.omnisend.api.templates.replace({
-	id: '6650a1b2c3d4e5f6a7b8c9d0',
+	id: '6650a1b2c3d4e5f6a7b8c9d5',
 	name: 'Spring sale',
 	generalSettings: {
-		body: { backgroundColor: 'example' },
 		content: {
-			backgroundColor: 'example',
-			color: '#222222',
-			fontFamily: 'Arial',
+			backgroundColor: '#FFFFFF',
+			width: '600px',
+			fontFamily: 'Arial, sans-serif',
 			fontSize: '14px',
-			width: '100%',
+			color: '#212121',
 		},
+		logo: {
+			id: 'insertLogo.jpg',
+			source: '/image/newsletter/insertLogo.jpg',
+			width: 1200,
+			height: 536,
+		},
+		body: { backgroundColor: '#E3E5E8' },
 		buttonPresets: [{
-			id: '6650a1b2c3d4e5f6a7b8c9d0',
+			id: 'primary_button',
+			name: 'Primary button',
 			styles: {
-				borderRadius: '4px',
-				color: '#222222',
-				fontFamily: 'Arial',
-				fontSize: '14px',
+				backgroundColor: '#00A3FF',
+				borderRadius: '28px',
+				fontFamily: 'Arial, sans-serif',
+				fontSize: '16px',
+				color: '#FFFFFF',
+				paddingLeft: '16px',
+				paddingRight: '16px',
+				paddingTop: '16px',
+				paddingBottom: '16px',
+			},
+		}, {
+			id: 'secondary_button',
+			name: 'Secondary button',
+			styles: {
+				backgroundColor: '#FFFFFF',
+				border: '2px solid #000000',
+				borderRadius: '28px',
+				fontFamily: 'Arial, sans-serif',
+				fontSize: '16px',
+				color: '#000000',
+				paddingLeft: '16px',
+				paddingRight: '16px',
+				paddingTop: '16px',
+				paddingBottom: '16px',
+			},
+		}, {
+			id: 'tertiary_button',
+			name: 'Tertiary button',
+			styles: {
+				backgroundColor: '#000000',
+				border: '2px solid #FFFFFF',
+				borderRadius: '28px',
+				fontFamily: 'Arial, sans-serif',
+				fontSize: '16px',
+				color: '#FFFFFF',
+				paddingLeft: '16px',
+				paddingRight: '16px',
+				paddingTop: '16px',
+				paddingBottom: '16px',
 			},
 		}],
 		textPresets: [{
-			id: '6650a1b2c3d4e5f6a7b8c9d0',
+			id: 'heading_large',
+			name: 'Heading Large',
 			styles: {
-				color: '#222222',
-				fontFamily: 'Arial',
+				fontFamily: 'Arial, sans-serif',
+				fontSize: '48px',
+				color: '#000000',
+				lineHeight: '125%',
+			},
+		}, {
+			id: 'heading_medium',
+			name: 'Heading Medium',
+			styles: {
+				fontFamily: 'Arial, sans-serif',
+				fontSize: '36px',
+				color: '#000000',
+				lineHeight: '125%',
+			},
+		}, {
+			id: 'heading_small',
+			name: 'Heading Large',
+			styles: {
+				fontFamily: 'Arial, sans-serif',
+				fontSize: '30px',
+				color: '#000000',
+				lineHeight: '125%',
+			},
+		}, {
+			id: 'paragraph',
+			name: 'Paragraph',
+			styles: {
+				fontFamily: 'Arial, sans-serif',
 				fontSize: '14px',
-				lineHeight: 'example',
+				color: '#000000',
+				lineHeight: '150%',
+			},
+		}, {
+			id: 'footnote',
+			name: 'Footnote',
+			styles: {
+				fontFamily: 'Arial, sans-serif',
+				fontSize: '12px',
+				color: '#000000',
+				lineHeight: '150%',
 			},
 		}],
 	},
 	sections: [{
-		rows: [{}],
-		styleProperties: {},
+		rows: [{
+			columns: [{
+				width: '552px',
+				blocks: [{
+					type: 'htmlCode',
+					htmlCode: { style: '', body: '<p>Hello from Corsair</p>' },
+					styleProperties: { padding: '12px' },
+				}],
+			}],
+		}],
+		styleProperties: {
+			paddingLeft: '24px',
+			paddingRight: '24px',
+			paddingTop: '24px',
+			paddingBottom: '24px',
+			backgroundColor: '#FFFFFF',
+			verticalAlign: 'middle',
+		},
 	}],
 });
 ```

@@ -238,6 +238,13 @@ describe('requests', () => {
 		args[field] = 'a/../b c';
 		await endpointFor(id)(ctx(), args).catch(() => undefined);
 		expect(calls[0]?.url).toContain('a%2F..%2Fb%20c');
+		// `.` and `..` would make the URL parser drop the segment and hit the parent route.
+		for (const value of ['.', '..']) {
+			await expect(
+				endpointFor(id)(ctx(), { ...args, [field]: value }),
+			).rejects.toThrow('path value');
+		}
+		expect(calls).toHaveLength(1);
 	});
 
 	it('uses the baseUrl option for a self-hosted server or proxy', async () => {
@@ -258,6 +265,24 @@ describe('requests', () => {
 		expect(
 			baseUrlOf({ key: KEY, options: { baseUrl: 'http://localhost:8283/' } }),
 		).toBe('http://localhost:8283');
+		expect(() =>
+			baseUrlOf({
+				key: KEY,
+				options: { baseUrl: 'https://proxy.example.com/api?region=us' },
+			}),
+		).toThrow('query string or fragment');
+		expect(() =>
+			baseUrlOf({
+				key: KEY,
+				options: { baseUrl: 'https://proxy.example.com/#x' },
+			}),
+		).toThrow('query string or fragment');
+		expect(
+			baseUrlOf({
+				key: KEY,
+				options: { baseUrl: 'https://proxy.example.com/api/' },
+			}),
+		).toBe('https://proxy.example.com/api');
 	});
 
 	it('rejects bad input before sending anything', async () => {

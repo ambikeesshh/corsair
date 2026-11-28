@@ -3,7 +3,7 @@
 # docs-examples.test.ts parses every example with its input schema.
 displayName: Omnisend
 domain: omnisend.com
-description: "Email and SMS marketing with Omnisend: contacts and tags, campaigns (send, A/B tests, UTM), automations, segments, email templates and layouts, forms, products, categories, events, images, analytics and batches (108 operations)."
+description: "Email and SMS marketing with Omnisend: contacts and tags, campaigns (send, A/B tests, UTM), automations, segments, email templates and layouts, forms, products, categories, events, images, analytics and batches (107 operations)."
 recommendedAuth: api_key
 overviewNote: |
   Create an API key in Omnisend under Store settings > API keys and give it the scopes you need (contacts, campaigns, automations, products and so on). Things to know before you write:
@@ -52,7 +52,7 @@ apiExamples:
   automations.replaceBlocks:
     args: {"id": "6650a1b2c3d4e5f6a7b8c9d0", "blocks": [{"type": "delay"}]}
   automations.sendBlockTestEmail:
-    args: {"id": "6650a1b2c3d4e5f6a7b8c9d0", "blockID": "block-1", "recipients": ["example"]}
+    args: {"id": "6650a1b2c3d4e5f6a7b8c9d0", "blockID": "block-1", "recipients": ["qa-inbox@example.com"]}
   automations.setBlockUtm:
     args: {"id": "6650a1b2c3d4e5f6a7b8c9d0", "blockID": "block-1", "tags": {"campaign": "spring-sale", "medium": "email", "source": "newsletter"}}
   automations.setSchedule:
@@ -67,8 +67,6 @@ apiExamples:
     args: {"endpoint": "products"}
   batches.listItems:
     args: {"batchID": "6650a1b2c3d4e5f6a7b8c9d3"}
-  brands.connect:
-    args: {"platform": "custom", "version": "1", "website": "https://shop.example.com"}
   brands.getCurrent:
     args: {}
   campaigns.cancel:
@@ -94,7 +92,7 @@ apiExamples:
   campaigns.send:
     args: {"id": "6650a1b2c3d4e5f6a7b8c9d0"}
   campaigns.sendTestEmail:
-    args: {"id": "6650a1b2c3d4e5f6a7b8c9d0", "recipients": ["example"]}
+    args: {"id": "6650a1b2c3d4e5f6a7b8c9d0", "recipients": ["qa-inbox@example.com"]}
   campaigns.setUtm:
     args: {"id": "6650a1b2c3d4e5f6a7b8c9d0"}
   campaigns.stopAbTest:
@@ -190,7 +188,7 @@ apiExamples:
   images.list:
     args: {}
   images.upload:
-    args: {"file": {"base64": "SGVsbG8gZnJvbSBDb3JzYWly", "filename": "notes.txt", "contentType": "text/plain"}}
+    args: {"file": {"base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=", "filename": "pixel.png", "contentType": "image/png"}}
   images.uploadFromUrl:
     args: {"url": "https://example.com/article"}
   products.create:
@@ -216,7 +214,7 @@ apiExamples:
   segments.replace:
     args: {"segmentID": "6650a1b2c3d4e5f6a7b8c9d1", "conditionGroups": [{}], "name": "Spring sale"}
   templates.create:
-    args: {"name": "Spring sale", "generalSettings": {"body": {"backgroundColor": "example"}, "content": {"backgroundColor": "example", "color": "#222222", "fontFamily": "Arial", "fontSize": "14px", "width": "100%"}, "buttonPresets": [{"id": "6650a1b2c3d4e5f6a7b8c9d0", "styles": {"borderRadius": "4px", "color": "#222222", "fontFamily": "Arial", "fontSize": "14px"}}], "textPresets": [{"id": "6650a1b2c3d4e5f6a7b8c9d0", "styles": {"color": "#222222", "fontFamily": "Arial", "fontSize": "14px", "lineHeight": "example"}}]}, "sections": [{"rows": [{}], "styleProperties": {}}]}
+    args: {"name": "Spring sale", "generalSettings": {"content": {"backgroundColor": "#FFFFFF", "width": "600px", "fontFamily": "Arial, sans-serif", "fontSize": "14px", "color": "#212121"}, "logo": {"id": "insertLogo.jpg", "source": "/image/newsletter/insertLogo.jpg", "width": 1200, "height": 536}, "body": {"backgroundColor": "#E3E5E8"}, "buttonPresets": [{"id": "primary_button", "name": "Primary button", "styles": {"backgroundColor": "#00A3FF", "borderRadius": "28px", "fontFamily": "Arial, sans-serif", "fontSize": "16px", "color": "#FFFFFF", "paddingLeft": "16px", "paddingRight": "16px", "paddingTop": "16px", "paddingBottom": "16px"}}, {"id": "secondary_button", "name": "Secondary button", "styles": {"backgroundColor": "#FFFFFF", "border": "2px solid #000000", "borderRadius": "28px", "fontFamily": "Arial, sans-serif", "fontSize": "16px", "color": "#000000", "paddingLeft": "16px", "paddingRight": "16px", "paddingTop": "16px", "paddingBottom": "16px"}}, {"id": "tertiary_button", "name": "Tertiary button", "styles": {"backgroundColor": "#000000", "border": "2px solid #FFFFFF", "borderRadius": "28px", "fontFamily": "Arial, sans-serif", "fontSize": "16px", "color": "#FFFFFF", "paddingLeft": "16px", "paddingRight": "16px", "paddingTop": "16px", "paddingBottom": "16px"}}], "textPresets": [{"id": "heading_large", "name": "Heading Large", "styles": {"fontFamily": "Arial, sans-serif", "fontSize": "48px", "color": "#000000", "lineHeight": "125%"}}, {"id": "heading_medium", "name": "Heading Medium", "styles": {"fontFamily": "Arial, sans-serif", "fontSize": "36px", "color": "#000000", "lineHeight": "125%"}}, {"id": "heading_small", "name": "Heading Large", "styles": {"fontFamily": "Arial, sans-serif", "fontSize": "30px", "color": "#000000", "lineHeight": "125%"}}, {"id": "paragraph", "name": "Paragraph", "styles": {"fontFamily": "Arial, sans-serif", "fontSize": "14px", "color": "#000000", "lineHeight": "150%"}}, {"id": "footnote", "name": "Footnote", "styles": {"fontFamily": "Arial, sans-serif", "fontSize": "12px", "color": "#000000", "lineHeight": "150%"}}]}, "sections": [{"rows": [{"columns": [{"width": "552px", "blocks": [{"type": "htmlCode", "htmlCode": {"style": "", "body": "<p>Hello from Corsair</p>"}, "styleProperties": {"padding": "12px"}}]}]}], "styleProperties": {"paddingLeft": "24px", "paddingRight": "24px", "paddingTop": "24px", "paddingBottom": "24px", "backgroundColor": "#FFFFFF", "verticalAlign": "middle"}}]}
   templates.delete:
     args: {"id": "6650a1b2c3d4e5f6a7b8c9d0"}
   templates.get:
@@ -228,7 +226,7 @@ apiExamples:
   templates.render:
     args: {"id": "6650a1b2c3d4e5f6a7b8c9d0"}
   templates.replace:
-    args: {"id": "6650a1b2c3d4e5f6a7b8c9d0", "name": "Spring sale", "generalSettings": {"body": {"backgroundColor": "example"}, "content": {"backgroundColor": "example", "color": "#222222", "fontFamily": "Arial", "fontSize": "14px", "width": "100%"}, "buttonPresets": [{"id": "6650a1b2c3d4e5f6a7b8c9d0", "styles": {"borderRadius": "4px", "color": "#222222", "fontFamily": "Arial", "fontSize": "14px"}}], "textPresets": [{"id": "6650a1b2c3d4e5f6a7b8c9d0", "styles": {"color": "#222222", "fontFamily": "Arial", "fontSize": "14px", "lineHeight": "example"}}]}, "sections": [{"rows": [{}], "styleProperties": {}}]}
+    args: {"id": "6650a1b2c3d4e5f6a7b8c9d5", "name": "Spring sale", "generalSettings": {"content": {"backgroundColor": "#FFFFFF", "width": "600px", "fontFamily": "Arial, sans-serif", "fontSize": "14px", "color": "#212121"}, "logo": {"id": "insertLogo.jpg", "source": "/image/newsletter/insertLogo.jpg", "width": 1200, "height": 536}, "body": {"backgroundColor": "#E3E5E8"}, "buttonPresets": [{"id": "primary_button", "name": "Primary button", "styles": {"backgroundColor": "#00A3FF", "borderRadius": "28px", "fontFamily": "Arial, sans-serif", "fontSize": "16px", "color": "#FFFFFF", "paddingLeft": "16px", "paddingRight": "16px", "paddingTop": "16px", "paddingBottom": "16px"}}, {"id": "secondary_button", "name": "Secondary button", "styles": {"backgroundColor": "#FFFFFF", "border": "2px solid #000000", "borderRadius": "28px", "fontFamily": "Arial, sans-serif", "fontSize": "16px", "color": "#000000", "paddingLeft": "16px", "paddingRight": "16px", "paddingTop": "16px", "paddingBottom": "16px"}}, {"id": "tertiary_button", "name": "Tertiary button", "styles": {"backgroundColor": "#000000", "border": "2px solid #FFFFFF", "borderRadius": "28px", "fontFamily": "Arial, sans-serif", "fontSize": "16px", "color": "#FFFFFF", "paddingLeft": "16px", "paddingRight": "16px", "paddingTop": "16px", "paddingBottom": "16px"}}], "textPresets": [{"id": "heading_large", "name": "Heading Large", "styles": {"fontFamily": "Arial, sans-serif", "fontSize": "48px", "color": "#000000", "lineHeight": "125%"}}, {"id": "heading_medium", "name": "Heading Medium", "styles": {"fontFamily": "Arial, sans-serif", "fontSize": "36px", "color": "#000000", "lineHeight": "125%"}}, {"id": "heading_small", "name": "Heading Large", "styles": {"fontFamily": "Arial, sans-serif", "fontSize": "30px", "color": "#000000", "lineHeight": "125%"}}, {"id": "paragraph", "name": "Paragraph", "styles": {"fontFamily": "Arial, sans-serif", "fontSize": "14px", "color": "#000000", "lineHeight": "150%"}}, {"id": "footnote", "name": "Footnote", "styles": {"fontFamily": "Arial, sans-serif", "fontSize": "12px", "color": "#000000", "lineHeight": "150%"}}]}, "sections": [{"rows": [{"columns": [{"width": "552px", "blocks": [{"type": "htmlCode", "htmlCode": {"style": "", "body": "<p>Hello from Corsair</p>"}, "styleProperties": {"padding": "12px"}}]}]}], "styleProperties": {"paddingLeft": "24px", "paddingRight": "24px", "paddingTop": "24px", "paddingBottom": "24px", "backgroundColor": "#FFFFFF", "verticalAlign": "middle"}}]}
   universalLayouts.create:
     args: {"name": "Spring sale", "content": {"rows": [{}], "styleProperties": {}}}
   universalLayouts.delete:

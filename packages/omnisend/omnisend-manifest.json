@@ -576,7 +576,8 @@
             "items": {
               "$ref": "ExitConditionRequest"
             },
-            "type": "array"
+            "type": "array",
+            "nullable": true
           },
           "name": {
             "description": "Automation workflow name",
@@ -736,34 +737,6 @@
       },
       "output": {
         "$ref": "Batch"
-      }
-    },
-    {
-      "id": "brands.connect",
-      "method": "POST",
-      "path": "/brands/current",
-      "tag": "Brands",
-      "summary": "Connect brand",
-      "request": "json",
-      "response": "empty",
-      "input": {
-        "type": "object",
-        "properties": {
-          "currency": {
-            "type": "string"
-          },
-          "platform": {
-            "type": "string"
-          },
-          "version": {
-            "maxLength": 10,
-            "type": "string"
-          },
-          "website": {
-            "type": "string"
-          }
-        },
-        "required": ["platform", "version", "website"]
       }
     },
     {
@@ -3134,6 +3107,7 @@
       "summary": "Upload image file",
       "request": "multipart",
       "response": "json",
+      "maxUploadBytes": 5242880,
       "input": {
         "type": "object",
         "properties": {
@@ -6458,7 +6432,8 @@
               "$ref": "FrequencyLimiterRequest"
             }
           ],
-          "description": "Frequency limiter — omit or null to leave the automation without a frequency limit."
+          "description": "Frequency limiter — omit or null to leave the automation without a frequency limit.",
+          "nullable": true
         },
         "overlapLimiter": {
           "allOf": [
@@ -6466,7 +6441,8 @@
               "$ref": "OverlapLimiterRequest"
             }
           ],
-          "description": "Overlap limiter — omit (or send `null`) to disable the overlap check. When provided, the contact is skipped if they are currently in (or recently completed) the listed automations."
+          "description": "Overlap limiter — omit (or send `null`) to disable the overlap check. When provided, the contact is skipped if they are currently in (or recently completed) the listed automations.",
+          "nullable": true
         },
         "sendingThresholds": {
           "allOf": [
@@ -6604,8 +6580,7 @@
           "type": "string"
         },
         "value": {
-          "description": "Custom property value; shape matches the declared type (read-only)",
-          "type": "object"
+          "description": "Custom property value; a string, number, boolean or list, matching `type` (read-only)"
         }
       },
       "type": "object"
@@ -12889,7 +12864,8 @@
         "replyToEmail": {
           "description": "Reply-to email address. Must be a verified email. Send `null` or an empty string to clear the reply-to address.",
           "maxLength": 250,
-          "type": "string"
+          "type": "string",
+          "nullable": true
         },
         "senderEmail": {
           "description": "Sender email address. Must be an address verified for the brand's sending domain. When the email block has no sender, the brand's default automation sender is used",
@@ -12924,11 +12900,13 @@
         },
         "iconID": {
           "description": "Optional icon image ID obtained from the Images API. Send `null` or an empty string to remove the existing icon.",
-          "type": "string"
+          "type": "string",
+          "nullable": true
         },
         "imageID": {
           "description": "Optional image ID displayed below the push notification body. Send `null` or an empty string to remove the existing image.",
-          "type": "string"
+          "type": "string",
+          "nullable": true
         },
         "isSkipAllowed": {
           "description": "Whether skipping this block is allowed when the contact is not eligible to receive this message. When true (default), the contact bypasses this block and continues to the next block in the workflow. When false, the workflow is canceled for this contact.",
@@ -12955,7 +12933,8 @@
         },
         "imageID": {
           "description": "MMS image ID. Send `null` or an empty string to remove the existing image.",
-          "type": "string"
+          "type": "string",
+          "nullable": true
         },
         "isLinkShorteningEnabled": {
           "description": "Whether link shortening is enabled.",
@@ -13005,7 +12984,8 @@
               "$ref": "FrequencyLimiterRequest"
             }
           ],
-          "description": "Frequency limiter. Send `null` to clear the existing limiter; provide an object to replace it. Omit to leave the current configuration unchanged."
+          "description": "Frequency limiter. Send `null` to clear the existing limiter; provide an object to replace it. Omit to leave the current configuration unchanged.",
+          "nullable": true
         },
         "overlapLimiter": {
           "allOf": [
@@ -13013,7 +12993,8 @@
               "$ref": "OverlapLimiterRequest"
             }
           ],
-          "description": "Overlap limiter. When provided, replaces the existing limiter in full. Send `null` to clear the limiter entirely."
+          "description": "Overlap limiter. When provided, replaces the existing limiter in full. Send `null` to clear the limiter entirely.",
+          "nullable": true
         },
         "sendingThresholds": {
           "allOf": [
@@ -13072,7 +13053,8 @@
               "$ref": "ContactFilterGroupRequest"
             }
           ],
-          "description": "Audience filter group for contact eligibility."
+          "description": "Audience filter group for contact eligibility.",
+          "nullable": true
         },
         "condition": {
           "allOf": [
@@ -13088,7 +13070,8 @@
               "$ref": "InactivitySettingsRequest"
             }
           ],
-          "description": "Inactivity settings — the workflow fires only after the contact has been inactive for the specified period."
+          "description": "Inactivity settings — the workflow fires only after the contact has been inactive for the specified period.",
+          "nullable": true
         }
       },
       "type": "object"

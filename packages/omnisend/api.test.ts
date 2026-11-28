@@ -16,10 +16,10 @@ import type { OmnisendContext } from './index';
  * inbox). The only mail it sends is campaigns.sendTestEmail to that inbox.
  *
  * Never run here: campaigns.send, the A/B test sends, automations.enable,
- * automations.sendBlockTestEmail and events.send (they message real
- * contacts or start flows), and brands.connect (meant for platform apps).
- * Routes the store's plan or setup refuses (402, 403, 409, 422) are recorded
- * as expected errors, not failures.
+ * automations.sendBlockTestEmail, events.send and batches.create (they
+ * message real contacts or start flows). Routes the store's plan or setup
+ * refuses (402, 403, 409, 422) are recorded as expected errors, not
+ * failures; a 404 fails the run, and so does any entry cleanup can't delete.
  */
 const key = process.env.OMNISEND_API_KEY;
 const inbox = process.env.OMNISEND_LIVE_EMAIL ?? 'corsair-tests@inkboxmail.com';
@@ -49,7 +49,8 @@ function endpoint(id: string): AnyEndpoint {
 }
 
 const RUN = `corsair-live-${Date.now()}`;
-const EXPECTED = new Set([402, 403, 404, 409, 422]);
+// Plan or setup refusals. A 404 is never expected: it would mean a wrong route.
+const EXPECTED = new Set([402, 403, 409, 422]);
 const report: string[] = [];
 const ids: Record<string, string | undefined> = {};
 
@@ -63,7 +64,7 @@ async function step(
 		const out = (await endpoint(id)(ctx, args)) as Json;
 		keep?.(out ?? {});
 		report.push(`ok       ${id}`);
-		return out;
+		return out ?? {};
 	} catch (error) {
 		const status = (error as { status?: number }).status;
 		const line = `${status && EXPECTED.has(status) ? 'expected' : 'FAILED  '} ${id} ${String((error as Error).message).slice(0, 160)}`;
@@ -95,14 +96,23 @@ describeIfKey('Omnisend live run', () => {
 			['products.delete', { productID: ids.product }],
 			['categories.delete', { categoryID: ids.category }],
 		];
+		const leftovers: string[] = [];
 		for (const [id, args] of cleanup) {
 			if (Object.values(args).some((v) => !v)) continue;
-			await step(id, args).catch(() => undefined);
+			// Any answer but success (an "expected" 409 too) leaves the entry in the store.
+			const out = await step(id, args).catch(() => undefined);
+			if (out === undefined) leftovers.push(`${id} ${JSON.stringify(args)}`);
 		}
+		if (leftovers.length > 0) report.push(`LEFTOVER ${leftovers.join('; ')}`);
 		if (process.env.OMNISEND_LIVE_REPORT) {
 			writeFileSync(process.env.OMNISEND_LIVE_REPORT, `${report.join('\n')}\n`);
 		}
 		console.log(report.join('\n'));
+		if (leftovers.length > 0) {
+			throw new Error(
+				`Cleanup left entries in the store: ${leftovers.join('; ')}`,
+			);
+		}
 	});
 
 	it('reads every list and the brand', async () => {

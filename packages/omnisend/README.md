@@ -1,6 +1,6 @@
 # @corsair-dev/omnisend
 
-Email and SMS marketing with Omnisend: contacts and tags, campaigns (send, A/B tests, UTM), automations, segments, email templates and layouts, forms, products and categories, events, images, analytics reports and batches (108 operations).
+Email and SMS marketing with Omnisend: contacts and tags, campaigns (send, A/B tests, UTM), automations, segments, email templates and layouts, forms, products and categories, events, images, analytics reports and batches (107 operations).
 
 ## Install
 
@@ -34,7 +34,6 @@ pnpm add @corsair-dev/omnisend
 | `batches.get` | `omnisend.api.batches.get` | `read` | Read a batch status and counts; pending and inProgress mean it still runs, finished and stopped mean it ended. |
 | `batches.list` | `omnisend.api.batches.list` | `read` | Page the batches for one endpoint; categories batches cannot be listed. |
 | `batches.listItems` | `omnisend.api.batches.listItems` | `read` | Read the per-item requests, responses and errors of a batch. |
-| `brands.connect` | `omnisend.api.brands.connect` | `write` | Connect brand. With this endpoint you can connect your site to Omnisend. Note it's only possible to connect store with oAuth flow. Links the brand to an ecommerce platform; meant for platform apps. |
 | `brands.getCurrent` | `omnisend.api.brands.getCurrent` | `read` | Get information about brand. With this endpoint you can get brand's information. |
 | `campaigns.cancel` | `omnisend.api.campaigns.cancel` | `write` | Cancel a scheduled, paused or started-email campaign; sent campaigns cannot be canceled. |
 | `campaigns.copy` | `omnisend.api.campaigns.copy` | `write` | Duplicate a campaign as a new draft. |
@@ -114,7 +113,7 @@ pnpm add @corsair-dev/omnisend
 | `templates.importFromHtml` | `omnisend.api.templates.importFromHtml` | `write` | Import raw HTML, up to 1 MB, as a new email template Omnisend converts to editor sections. |
 | `templates.list` | `omnisend.api.templates.list` | `read` | Page the email templates, filtered by name. |
 | `templates.render` | `omnisend.api.templates.render` | `read` | Render a template to its HTML for preview; nothing is sent and no state changes. |
-| `templates.replace` | `omnisend.api.templates.replace` | `write` | Replace an email template in full; omitted fields drop to their defaults. Takes the same full body as templates.create. |
+| `templates.replace` | `omnisend.api.templates.replace` | `write` | Replace an email template in full. Takes the same body as templates.create: name, generalSettings with the default presets and at least one section. |
 | `universalLayouts.create` | `omnisend.api.universalLayouts.create` | `write` | Create universal layout. With this endpoint you can create a new universal layout. content is one section: rows (columns of blocks) and styleProperties; copy one from templates.get to start. |
 | `universalLayouts.delete` | `omnisend.api.universalLayouts.delete` | `destructive` | Delete universal layout. With this endpoint you can delete a universal layout by ID. Cannot be undone. |
 | `universalLayouts.get` | `omnisend.api.universalLayouts.get` | `read` | Get universal layout. With this endpoint you can get a universal layout by ID. |

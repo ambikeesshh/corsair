@@ -38,7 +38,6 @@ export const omnisendEndpointsNested = {
 		listItems: op('batches.listItems'),
 	},
 	brands: {
-		connect: op('brands.connect'),
 		getCurrent: op('brands.getCurrent'),
 	},
 	campaigns: {
@@ -184,7 +183,6 @@ export const omnisendEndpointSchemas = {
 	'batches.get': omnisendSchemaEntry('batches.get'),
 	'batches.list': omnisendSchemaEntry('batches.list'),
 	'batches.listItems': omnisendSchemaEntry('batches.listItems'),
-	'brands.connect': omnisendSchemaEntry('brands.connect'),
 	'brands.getCurrent': omnisendSchemaEntry('brands.getCurrent'),
 	'campaigns.cancel': omnisendSchemaEntry('campaigns.cancel'),
 	'campaigns.copy': omnisendSchemaEntry('campaigns.copy'),
@@ -397,11 +395,6 @@ export const omnisendEndpointMeta = {
 	'batches.listItems': {
 		riskLevel: 'read',
 		description: 'Read the per-item requests, responses and errors of a batch.',
-	},
-	'brands.connect': {
-		riskLevel: 'write',
-		description:
-			"Connect brand. With this endpoint you can connect your site to Omnisend. Note it's only possible to connect store with oAuth flow. Links the brand to an ecommerce platform; meant for platform apps.",
 	},
 	'brands.getCurrent': {
 		riskLevel: 'read',
@@ -793,7 +786,7 @@ export const omnisendEndpointMeta = {
 	'templates.replace': {
 		riskLevel: 'write',
 		description:
-			'Replace an email template in full; omitted fields drop to their defaults. Takes the same full body as templates.create.',
+			'Replace an email template in full. Takes the same body as templates.create: name, generalSettings with the default presets and at least one section.',
 	},
 	'universalLayouts.create': {
 		riskLevel: 'write',

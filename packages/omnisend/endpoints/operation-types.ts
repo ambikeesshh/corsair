@@ -37,7 +37,6 @@ export const OMNISEND_OPERATION_IDS = [
 	'batches.get',
 	'batches.list',
 	'batches.listItems',
-	'brands.connect',
 	'brands.getCurrent',
 	'campaigns.cancel',
 	'campaigns.copy',
@@ -597,9 +596,9 @@ export type OmnisendCreateSendingSettingsInput = {
 /** Automation settings configuration for create. All sub-fields are optional — omit to use engine defaults. `sendingThresholds` does not accept `null` — sending `null` returns `400`. `frequencyLimiter` accepts `null` (treated the same as omitted: no limiter is set). `overlapLimiter` accepts `null`… */
 export type OmnisendCreateSettingsRequestInput = {
 	/** Frequency limiter — omit or null to leave the automation without a frequency limit. */
-	frequencyLimiter?: OmnisendFrequencyLimiterRequestInput;
+	frequencyLimiter?: OmnisendFrequencyLimiterRequestInput | null;
 	/** Overlap limiter — omit (or send `null`) to disable the overlap check. When provided, the contact is skipped if they are currently in (or recently completed) the listed automations. */
-	overlapLimiter?: OmnisendOverlapLimiterRequestInput;
+	overlapLimiter?: OmnisendOverlapLimiterRequestInput | null;
 	/** Sending thresholds — omit to use defaults (subscribed only). */
 	sendingThresholds?: OmnisendSendingThresholdsRequestInput;
 };
@@ -2493,7 +2492,7 @@ export type OmnisendPatchSendEmailRequestInput = {
 	/** Email preheader text displayed after the subject line. Supports personalization tags. */
 	preheader?: string;
 	/** Reply-to email address. Must be a verified email. Send `null` or an empty string to clear the reply-to address. */
-	replyToEmail?: string;
+	replyToEmail?: string | null;
 	/** Sender email address. Must be an address verified for the brand's sending domain. When the email block has no sender, the brand's default automation sender is used */
 	senderEmail?: string;
 	/** Sender display name shown in the recipient's inbox */
@@ -2509,9 +2508,9 @@ export type OmnisendPatchSendPushRequestInput = {
 	/** Click-through URL the recipient is taken to when tapping the notification. */
 	clickUrl?: string;
 	/** Optional icon image ID obtained from the Images API. Send `null` or an empty string to remove the existing icon. */
-	iconID?: string;
+	iconID?: string | null;
 	/** Optional image ID displayed below the push notification body. Send `null` or an empty string to remove the existing image. */
-	imageID?: string;
+	imageID?: string | null;
 	/** Whether skipping this block is allowed when the contact is not eligible to receive this message. When true (default), the contact bypasses this block and continues to the next block in the workflow. When false, the workflow is canceled for this contact. */
 	isSkipAllowed?: boolean;
 	/** Push notification title. Supports personalization tags, e.g. [[contact.first_name]] */
@@ -2523,7 +2522,7 @@ export type OmnisendPatchSendSmsRequestInput = {
 	/** Compliance settings. When provided, all four fields are replaced atomically. Cannot be `null` — omit the field to leave compliance unchanged. */
 	compliance?: OmnisendUpdateSmsComplianceInput;
 	/** MMS image ID. Send `null` or an empty string to remove the existing image. */
-	imageID?: string;
+	imageID?: string | null;
 	/** Whether link shortening is enabled. */
 	isLinkShorteningEnabled?: boolean;
 	/** Whether skipping this block is allowed when the contact is not eligible to receive this message. */
@@ -2545,9 +2544,9 @@ export type OmnisendPatchSendWebhookRequestInput = {
 /** Automation settings patch. Each sub-field follows partial-update semantics: omit to leave unchanged, send a value to replace. `sendingThresholds` does not accept `null` — sending `null` returns `400`. `frequencyLimiter` accepts `null` to clear (disable) the existing limiter. `overlapLimiter`… */
 export type OmnisendPatchSettingsRequestInput = {
 	/** Frequency limiter. Send `null` to clear the existing limiter; provide an object to replace it. Omit to leave the current configuration unchanged. */
-	frequencyLimiter?: OmnisendFrequencyLimiterRequestInput;
+	frequencyLimiter?: OmnisendFrequencyLimiterRequestInput | null;
 	/** Overlap limiter. When provided, replaces the existing limiter in full. Send `null` to clear the limiter entirely. */
-	overlapLimiter?: OmnisendOverlapLimiterRequestInput;
+	overlapLimiter?: OmnisendOverlapLimiterRequestInput | null;
 	/** Sending thresholds. When provided, replaces the existing thresholds in full. */
 	sendingThresholds?: OmnisendSendingThresholdsRequestInput;
 };
@@ -2571,11 +2570,11 @@ export type OmnisendPatchTriggerConditionInput = {
 /** Trigger configuration for PATCH. Tri-state per field — omit to leave unchanged, send a value to replace, send `null` to clear (where the schema marks the field nullable). Sending `null` for `condition` returns `400`. When condition is provided, the entire trigger condition (event, origin, and… */
 export type OmnisendPatchTriggerRequestInput = {
 	/** Audience filter group for contact eligibility. */
-	audienceFilterGroup?: OmnisendContactFilterGroupRequestInput;
+	audienceFilterGroup?: OmnisendContactFilterGroupRequestInput | null;
 	/** Trigger condition. When provided, replaces the entire condition (event, origin, and filter groups) in full. */
 	condition?: OmnisendPatchTriggerConditionInput;
 	/** Inactivity settings — the workflow fires only after the contact has been inactive for the specified period. */
-	inactivitySettings?: OmnisendInactivitySettingsRequestInput;
+	inactivitySettings?: OmnisendInactivitySettingsRequestInput | null;
 };
 
 /** Preheader block to setup View in Browser link text formattings Text is formatted as ```Text<a href="https://view-inbrowser-link">LinkText</a>``` */
@@ -4046,8 +4045,8 @@ export type OmnisendCustomProperty = {
 	name?: string | null;
 	/** Custom property value type (read-only) */
 	type?: string | null;
-	/** Custom property value; shape matches the declared type (read-only) */
-	value?: Record<string, OmnisendJsonValue> | null;
+	/** Custom property value; a string, number, boolean or list, matching `type` (read-only) */
+	value?: OmnisendJsonValue | null;
 };
 
 /** Delay block configuration. The `mode` field determines the delay behavior: - "duration": wait for the specified amount of time units - "immediate": no wait, proceed to the next block - "specificTime": wait until the specified time of day in the brand's timezone `allowedWeekdays` is optional for… */
@@ -7061,7 +7060,7 @@ export type OmnisendOperationInputs = {
 		/** Automation workflow blocks. Each entry updates an existing block matched by `id`; fields within each block are applied as a partial update. The array does **not** reshape the block list — adding or removing blocks is not supported through this endpoint (use the dedicated block endpoints for… */
 		blocks?: Array<OmnisendPatchBlockRequestInput>;
 		/** Exit condition list. Replaces all existing exit conditions when provided. Send `null` or an empty array (`[]`) to clear all exit conditions; omit to leave unchanged. */
-		exitConditions?: Array<OmnisendExitConditionRequestInput>;
+		exitConditions?: Array<OmnisendExitConditionRequestInput> | null;
 		/** Automation workflow name */
 		name?: string;
 		/** Automation settings patch. Only provided sub-fields are updated. */
@@ -7096,12 +7095,6 @@ export type OmnisendOperationInputs = {
 	'batches.listItems': {
 		/** Batch ID */
 		batchID: string;
-	};
-	'brands.connect': {
-		currency?: string;
-		platform: string;
-		version: string;
-		website: string;
 	};
 	'brands.getCurrent': Record<string, never>;
 	'campaigns.cancel': {
@@ -7936,10 +7929,6 @@ export type OmnisendOperationOutputs = {
 	'batches.get': OmnisendBatch;
 	'batches.list': OmnisendListBatchesResponse;
 	'batches.listItems': OmnisendBatch;
-	'brands.connect': {
-		/** Omnisend accepted the call; it answered with no body. */
-		success: true;
-	};
 	'brands.getCurrent': FileOutput;
 	'campaigns.cancel': {
 		/** Omnisend accepted the call; it answered with no body. */
