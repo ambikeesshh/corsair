@@ -2016,16 +2016,16 @@ export type OmnisendFrequencyLimiterRequestInput = {
 export type OmnisendGeneralSettingsInput = {
 	/** Body settings */
 	body: OmnisendBodyInput;
-	/** Button presets */
-	buttonPresets?: Array<OmnisendButtonPresetInput>;
+	/** Button presets; must include the defaults primary_button, secondary_button and tertiary_button */
+	buttonPresets: Array<OmnisendButtonPresetInput>;
 	/** Content settings */
 	content: OmnisendContentSettingsInput;
 	/** Gmail settings */
 	gmail?: OmnisendGmailInput;
 	/** Logo settings */
 	logo?: OmnisendLogoSettingsInput;
-	/** Text presets */
-	textPresets?: Array<OmnisendTextPresetInput>;
+	/** Text presets; must include the defaults heading_large, heading_medium, heading_small, paragraph and footnote */
+	textPresets: Array<OmnisendTextPresetInput>;
 };
 
 /** Gmail specific settings for email. */
@@ -2661,11 +2661,11 @@ export type OmnisendSectionInput = {
 	/** Section product recommender - used to configure the product recommender functionality */
 	productRecommender?: OmnisendProductRecommenderInput;
 	/** Section rows - used to group content into logical sections. Null for a section that references a universal layout, and must be null or empty when sent for one. Locked email content (a campaign that has started sending) is the exception: its universal layout sections keep the layout rows the… */
-	rows?: Array<OmnisendRowInput> | null;
+	rows: Array<OmnisendRowInput> | null;
 	/** Section settings - used to configure the section behavior and content */
 	settings?: OmnisendEmailContentSettingsInput;
 	/** Section style properties - used to configure the section styling */
-	styleProperties?: OmnisendStylePropertiesInput;
+	styleProperties: OmnisendStylePropertiesInput;
 	/** Section type - determines the section functionality and available content options. products_listing: manually selected products. product_recommender: personalized recommendations (requires productRecommender). product_cart_recovery: abandoned cart items. product_back_in_stock: restocked items.… */
 	type?:
 		| 'products_listing'
@@ -5658,7 +5658,7 @@ export type OmnisendFrequencyLimiter = {
 export type OmnisendGeneralSettings = {
 	/** Body settings */
 	body?: OmnisendBody | null;
-	/** Button presets */
+	/** Button presets; must include the defaults primary_button, secondary_button and tertiary_button */
 	buttonPresets?: Array<OmnisendButtonPreset> | null;
 	/** Content settings */
 	content?: OmnisendContentSettings | null;
@@ -5666,7 +5666,7 @@ export type OmnisendGeneralSettings = {
 	gmail?: OmnisendGmail | null;
 	/** Logo settings */
 	logo?: OmnisendLogoSettings | null;
-	/** Text presets */
+	/** Text presets; must include the defaults heading_large, heading_medium, heading_small, paragraph and footnote */
 	textPresets?: Array<OmnisendTextPreset> | null;
 };
 
@@ -7818,11 +7818,11 @@ export type OmnisendOperationInputs = {
 	};
 	'templates.create': {
 		/** Template general settings - global and template level styles */
-		generalSettings?: OmnisendGeneralSettingsInput;
+		generalSettings: OmnisendGeneralSettingsInput;
 		/** Template name */
-		name?: string;
+		name: string;
 		/** Template sections */
-		sections?: Array<OmnisendSectionInput>;
+		sections: Array<OmnisendSectionInput>;
 	};
 	'templates.delete': {
 		/** Email Template ID (24 character hexadecimal) */
@@ -7860,17 +7860,17 @@ export type OmnisendOperationInputs = {
 		/** Email Template ID (24 character hexadecimal) */
 		id: string;
 		/** Template general settings - global and template level styles */
-		generalSettings?: OmnisendGeneralSettingsInput;
+		generalSettings: OmnisendGeneralSettingsInput;
 		/** Template name */
-		name?: string;
+		name: string;
 		/** Template sections */
-		sections?: Array<OmnisendSectionInput>;
+		sections: Array<OmnisendSectionInput>;
 	};
 	'universalLayouts.create': {
 		/** Universal layout content - the section structure */
-		content?: OmnisendSectionInput;
+		content: OmnisendSectionInput;
 		/** Universal layout name */
-		name?: string;
+		name: string;
 	};
 	'universalLayouts.delete': {
 		/** Universal Layout ID (24 character hexadecimal) */
@@ -7894,9 +7894,9 @@ export type OmnisendOperationInputs = {
 		/** Universal Layout ID (24 character hexadecimal) */
 		id: string;
 		/** Universal layout content - the section structure */
-		content?: OmnisendSectionInput;
+		content: OmnisendSectionInput;
 		/** Universal layout name */
-		name?: string;
+		name: string;
 	};
 };
 

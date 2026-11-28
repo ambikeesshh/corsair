@@ -420,7 +420,7 @@ export const omnisendEndpointMeta = {
 	'campaigns.create': {
 		riskLevel: 'write',
 		description:
-			'Create a campaign; a regular email campaign needs a template id, and creating with no verified sender answers 422.',
+			'Create a draft campaign. A regular email campaign needs content.email.templateID and senderName (Omnisend answers 400 without them), and creating with no verified sender answers 422.',
 	},
 	'campaigns.delete': {
 		riskLevel: 'destructive',
@@ -764,7 +764,8 @@ export const omnisendEndpointMeta = {
 	},
 	'templates.create': {
 		riskLevel: 'write',
-		description: 'Create an email template with a name and editor sections.',
+		description:
+			'Create an email template. Omnisend requires name, generalSettings (with its 3 default button presets and 5 default text presets) and at least one section. Simplest: templates.importFromHtml, or copy generalSettings and sections from templates.get of an existing template.',
 	},
 	'templates.delete': {
 		riskLevel: 'destructive',
@@ -792,12 +793,12 @@ export const omnisendEndpointMeta = {
 	'templates.replace': {
 		riskLevel: 'write',
 		description:
-			'Replace an email template in full; omitted fields drop to their defaults.',
+			'Replace an email template in full; omitted fields drop to their defaults. Takes the same full body as templates.create.',
 	},
 	'universalLayouts.create': {
 		riskLevel: 'write',
 		description:
-			'Create universal layout. With this endpoint you can create a new universal layout.',
+			'Create universal layout. With this endpoint you can create a new universal layout. content is one section: rows (columns of blocks) and styleProperties; copy one from templates.get to start.',
 	},
 	'universalLayouts.delete': {
 		riskLevel: 'destructive',
@@ -818,6 +819,6 @@ export const omnisendEndpointMeta = {
 	'universalLayouts.replace': {
 		riskLevel: 'write',
 		description:
-			'Update universal layout. With this endpoint you can update (fully replace) a universal layout by ID.',
+			'Update universal layout. With this endpoint you can update (fully replace) a universal layout by ID. content is one section: rows (columns of blocks) and styleProperties.',
 	},
 } as const satisfies RequiredPluginEndpointMeta<typeof omnisendEndpointsNested>;

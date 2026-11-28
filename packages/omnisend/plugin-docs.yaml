@@ -216,7 +216,7 @@ apiExamples:
   segments.replace:
     args: {"segmentID": "6650a1b2c3d4e5f6a7b8c9d1", "conditionGroups": [{}], "name": "Spring sale"}
   templates.create:
-    args: {}
+    args: {"name": "Spring sale", "generalSettings": {"body": {"backgroundColor": "example"}, "content": {"backgroundColor": "example", "color": "#222222", "fontFamily": "Arial", "fontSize": "14px", "width": "100%"}, "buttonPresets": [{"id": "6650a1b2c3d4e5f6a7b8c9d0", "styles": {"borderRadius": "4px", "color": "#222222", "fontFamily": "Arial", "fontSize": "14px"}}], "textPresets": [{"id": "6650a1b2c3d4e5f6a7b8c9d0", "styles": {"color": "#222222", "fontFamily": "Arial", "fontSize": "14px", "lineHeight": "example"}}]}, "sections": [{"rows": [{}], "styleProperties": {}}]}
   templates.delete:
     args: {"id": "6650a1b2c3d4e5f6a7b8c9d0"}
   templates.get:
@@ -228,9 +228,9 @@ apiExamples:
   templates.render:
     args: {"id": "6650a1b2c3d4e5f6a7b8c9d0"}
   templates.replace:
-    args: {"id": "6650a1b2c3d4e5f6a7b8c9d0"}
+    args: {"id": "6650a1b2c3d4e5f6a7b8c9d0", "name": "Spring sale", "generalSettings": {"body": {"backgroundColor": "example"}, "content": {"backgroundColor": "example", "color": "#222222", "fontFamily": "Arial", "fontSize": "14px", "width": "100%"}, "buttonPresets": [{"id": "6650a1b2c3d4e5f6a7b8c9d0", "styles": {"borderRadius": "4px", "color": "#222222", "fontFamily": "Arial", "fontSize": "14px"}}], "textPresets": [{"id": "6650a1b2c3d4e5f6a7b8c9d0", "styles": {"color": "#222222", "fontFamily": "Arial", "fontSize": "14px", "lineHeight": "example"}}]}, "sections": [{"rows": [{}], "styleProperties": {}}]}
   universalLayouts.create:
-    args: {}
+    args: {"name": "Spring sale", "content": {"rows": [{}], "styleProperties": {}}}
   universalLayouts.delete:
     args: {"id": "6650a1b2c3d4e5f6a7b8c9d0"}
   universalLayouts.get:
@@ -238,4 +238,4 @@ apiExamples:
   universalLayouts.list:
     args: {}
   universalLayouts.replace:
-    args: {"id": "6650a1b2c3d4e5f6a7b8c9d0"}
+    args: {"id": "6650a1b2c3d4e5f6a7b8c9d0", "name": "Spring sale", "content": {"rows": [{}], "styleProperties": {}}}

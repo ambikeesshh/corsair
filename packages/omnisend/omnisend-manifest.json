@@ -3671,9 +3671,11 @@
             "items": {
               "$ref": "Section"
             },
-            "type": "array"
+            "type": "array",
+            "minItems": 1
           }
-        }
+        },
+        "required": ["name", "generalSettings", "sections"]
       },
       "output": {
         "$ref": "Template"
@@ -3865,10 +3867,11 @@
             "items": {
               "$ref": "Section"
             },
-            "type": "array"
+            "type": "array",
+            "minItems": 1
           }
         },
-        "required": ["id"]
+        "required": ["id", "name", "generalSettings", "sections"]
       },
       "output": {
         "$ref": "Template"
@@ -3904,7 +3907,8 @@
             "description": "Universal layout name",
             "type": "string"
           }
-        }
+        },
+        "required": ["name", "content"]
       },
       "output": {
         "$ref": "UniversalLayout"
@@ -4029,7 +4033,7 @@
             "type": "string"
           }
         },
-        "required": ["id"]
+        "required": ["id", "name", "content"]
       },
       "output": {
         "$ref": "UniversalLayout"
@@ -11326,7 +11330,7 @@
           "description": "Body settings"
         },
         "buttonPresets": {
-          "description": "Button presets",
+          "description": "Button presets; must include the defaults primary_button, secondary_button and tertiary_button",
           "items": {
             "$ref": "ButtonPreset"
           },
@@ -11358,7 +11362,7 @@
           "description": "Logo settings"
         },
         "textPresets": {
-          "description": "Text presets",
+          "description": "Text presets; must include the defaults heading_large, heading_medium, heading_small, paragraph and footnote",
           "items": {
             "$ref": "TextPreset"
           },
@@ -11366,7 +11370,7 @@
           "type": "array"
         }
       },
-      "required": ["body", "content"],
+      "required": ["body", "content", "buttonPresets", "textPresets"],
       "type": "object"
     },
     "GetCategoriesResponse": {
@@ -13596,7 +13600,8 @@
           "description": "Section visibility settings - used to show the section on mobile or desktop only. Omitted, or with neither flag true, the section shows on all devices. When sent, it must set at least one flag."
         }
       },
-      "type": "object"
+      "type": "object",
+      "required": ["rows", "styleProperties"]
     },
     "SegmentCondition": {
       "description": "A single filter condition applied to a specific entity.",
@@ -14450,7 +14455,8 @@
           "items": {
             "$ref": "Section"
           },
-          "type": "array"
+          "type": "array",
+          "minItems": 1
         },
         "updatedAt": {
           "description": "Template updated at (read-only)",
@@ -14458,7 +14464,8 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "required": ["name", "generalSettings", "sections"]
     },
     "TemplateListItem": {
       "description": "Email template list item",
@@ -14791,7 +14798,8 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "required": ["name", "content"]
     },
     "UnsubscribeAction": {
       "description": "Unsubscribe action configuration. Contacts reaching this block are unsubscribed from the selected channels. This changes the contact's subscription status across the brand, not just in this automation. After this block, later send blocks on the same channel no longer reach the contact when the sending threshold is `subscribed` or `nonSubscribed`; with `all`, the contact still receives later email and SMS send blocks, but not push, because push only goes to subscribed contacts.",

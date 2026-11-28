@@ -68100,7 +68100,7 @@ await corsair.omnisend.api.campaigns.copy({ id: '6650a1b2c3d4e5f6a7b8c9d0' });
 
 `campaigns.create`
 
-Create a campaign; a regular email campaign needs a template id, and creating with no verified sender answers 422.
+Create a draft campaign. A regular email campaign needs content.email.templateID and senderName (Omnisend answers 400 without them), and creating with no verified sender answers 422.
 
 **Risk:** `write`
 
@@ -71286,7 +71286,7 @@ await corsair.omnisend.api.emailContent.replace({ id: '6650a1b2c3d4e5f6a7b8c9d0'
     backgroundRepeat?: repeat | no-repeat,
     backgroundSize?: contain | cover | auto
   },
-  buttonPresets?: {
+  buttonPresets: {
     id: string,
     name?: string,
     styles: {
@@ -71330,7 +71330,7 @@ await corsair.omnisend.api.emailContent.replace({ id: '6650a1b2c3d4e5f6a7b8c9d0'
     type?: image/jpg | image/jpeg | image/png | image/gif,
     width?: number
   },
-  textPresets?: {
+  textPresets: {
     id: string,
     name?: string,
     styles: {
@@ -71361,7 +71361,7 @@ await corsair.omnisend.api.emailContent.replace({ id: '6650a1b2c3d4e5f6a7b8c9d0'
     recencyMonths?: number,
     type?: string
   },
-  rows?: {
+  rows: {
     columns?: {
       blocks?: {
         button?: {
@@ -71975,7 +71975,7 @@ await corsair.omnisend.api.emailContent.replace({ id: '6650a1b2c3d4e5f6a7b8c9d0'
     sideBySideProductLayout?: string,
     universalLayoutID?: string
   },
-  styleProperties?: {
+  styleProperties: {
     alignment?: string,
     backgroundColor?: string,
     backgroundImageID?: string,
@@ -86363,21 +86363,55 @@ await corsair.omnisend.api.segments.replace({
 
 `templates.create`
 
-Create an email template with a name and editor sections.
+Create an email template. Omnisend requires name, generalSettings (with its 3 default button presets and 5 default text presets) and at least one section. Simplest: templates.importFromHtml, or copy generalSettings and sections from templates.get of an existing template.
 
 **Risk:** `write`
 
 ```ts
-await corsair.omnisend.api.templates.create({});
+await corsair.omnisend.api.templates.create({
+	name: 'Spring sale',
+	generalSettings: {
+		body: { backgroundColor: 'example' },
+		content: {
+			backgroundColor: 'example',
+			color: '#222222',
+			fontFamily: 'Arial',
+			fontSize: '14px',
+			width: '100%',
+		},
+		buttonPresets: [{
+			id: '6650a1b2c3d4e5f6a7b8c9d0',
+			styles: {
+				borderRadius: '4px',
+				color: '#222222',
+				fontFamily: 'Arial',
+				fontSize: '14px',
+			},
+		}],
+		textPresets: [{
+			id: '6650a1b2c3d4e5f6a7b8c9d0',
+			styles: {
+				color: '#222222',
+				fontFamily: 'Arial',
+				fontSize: '14px',
+				lineHeight: 'example',
+			},
+		}],
+	},
+	sections: [{
+		rows: [{}],
+		styleProperties: {},
+	}],
+});
 ```
 
 **Input**
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `generalSettings` | `object` | No | Template general settings - global and template level styles |
-| `name` | `string` | No | Template name |
-| `sections` | `object[]` | No | Template sections |
+| `generalSettings` | `object` | Yes | Template general settings - global and template level styles |
+| `name` | `string` | Yes | Template name |
+| `sections` | `object[]` | Yes | Template sections |
 
 <AccordionGroup>
 <Accordion title="generalSettings full type">
@@ -86390,7 +86424,7 @@ await corsair.omnisend.api.templates.create({});
     backgroundRepeat?: repeat | no-repeat,
     backgroundSize?: contain | cover | auto
   },
-  buttonPresets?: {
+  buttonPresets: {
     id: string,
     name?: string,
     styles: {
@@ -86434,7 +86468,7 @@ await corsair.omnisend.api.templates.create({});
     type?: image/jpg | image/jpeg | image/png | image/gif,
     width?: number
   },
-  textPresets?: {
+  textPresets: {
     id: string,
     name?: string,
     styles: {
@@ -86465,7 +86499,7 @@ await corsair.omnisend.api.templates.create({});
     recencyMonths?: number,
     type?: string
   },
-  rows?: {
+  rows: {
     columns?: {
       blocks?: {
         button?: {
@@ -87079,7 +87113,7 @@ await corsair.omnisend.api.templates.create({});
     sideBySideProductLayout?: string,
     universalLayoutID?: string
   },
-  styleProperties?: {
+  styleProperties: {
     alignment?: string,
     backgroundColor?: string,
     backgroundImageID?: string,
@@ -89582,12 +89616,47 @@ await corsair.omnisend.api.templates.render({ id: '6650a1b2c3d4e5f6a7b8c9d0' });
 
 `templates.replace`
 
-Replace an email template in full; omitted fields drop to their defaults.
+Replace an email template in full; omitted fields drop to their defaults. Takes the same full body as templates.create.
 
 **Risk:** `write`
 
 ```ts
-await corsair.omnisend.api.templates.replace({ id: '6650a1b2c3d4e5f6a7b8c9d0' });
+await corsair.omnisend.api.templates.replace({
+	id: '6650a1b2c3d4e5f6a7b8c9d0',
+	name: 'Spring sale',
+	generalSettings: {
+		body: { backgroundColor: 'example' },
+		content: {
+			backgroundColor: 'example',
+			color: '#222222',
+			fontFamily: 'Arial',
+			fontSize: '14px',
+			width: '100%',
+		},
+		buttonPresets: [{
+			id: '6650a1b2c3d4e5f6a7b8c9d0',
+			styles: {
+				borderRadius: '4px',
+				color: '#222222',
+				fontFamily: 'Arial',
+				fontSize: '14px',
+			},
+		}],
+		textPresets: [{
+			id: '6650a1b2c3d4e5f6a7b8c9d0',
+			styles: {
+				color: '#222222',
+				fontFamily: 'Arial',
+				fontSize: '14px',
+				lineHeight: 'example',
+			},
+		}],
+	},
+	sections: [{
+		rows: [{}],
+		styleProperties: {},
+	}],
+});
 ```
 
 **Input**
@@ -89595,9 +89664,9 @@ await corsair.omnisend.api.templates.replace({ id: '6650a1b2c3d4e5f6a7b8c9d0' })
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `id` | `string` | Yes | Email Template ID (24 character hexadecimal) |
-| `generalSettings` | `object` | No | Template general settings - global and template level styles |
-| `name` | `string` | No | Template name |
-| `sections` | `object[]` | No | Template sections |
+| `generalSettings` | `object` | Yes | Template general settings - global and template level styles |
+| `name` | `string` | Yes | Template name |
+| `sections` | `object[]` | Yes | Template sections |
 
 <AccordionGroup>
 <Accordion title="generalSettings full type">
@@ -89610,7 +89679,7 @@ await corsair.omnisend.api.templates.replace({ id: '6650a1b2c3d4e5f6a7b8c9d0' })
     backgroundRepeat?: repeat | no-repeat,
     backgroundSize?: contain | cover | auto
   },
-  buttonPresets?: {
+  buttonPresets: {
     id: string,
     name?: string,
     styles: {
@@ -89654,7 +89723,7 @@ await corsair.omnisend.api.templates.replace({ id: '6650a1b2c3d4e5f6a7b8c9d0' })
     type?: image/jpg | image/jpeg | image/png | image/gif,
     width?: number
   },
-  textPresets?: {
+  textPresets: {
     id: string,
     name?: string,
     styles: {
@@ -89685,7 +89754,7 @@ await corsair.omnisend.api.templates.replace({ id: '6650a1b2c3d4e5f6a7b8c9d0' })
     recencyMonths?: number,
     type?: string
   },
-  rows?: {
+  rows: {
     columns?: {
       blocks?: {
         button?: {
@@ -90299,7 +90368,7 @@ await corsair.omnisend.api.templates.replace({ id: '6650a1b2c3d4e5f6a7b8c9d0' })
     sideBySideProductLayout?: string,
     universalLayoutID?: string
   },
-  styleProperties?: {
+  styleProperties: {
     alignment?: string,
     backgroundColor?: string,
     backgroundImageID?: string,
@@ -91116,20 +91185,26 @@ await corsair.omnisend.api.templates.replace({ id: '6650a1b2c3d4e5f6a7b8c9d0' })
 
 `universalLayouts.create`
 
-Create universal layout. With this endpoint you can create a new universal layout.
+Create universal layout. With this endpoint you can create a new universal layout. content is one section: rows (columns of blocks) and styleProperties; copy one from templates.get to start.
 
 **Risk:** `write`
 
 ```ts
-await corsair.omnisend.api.universalLayouts.create({});
+await corsair.omnisend.api.universalLayouts.create({
+	name: 'Spring sale',
+	content: {
+		rows: [{}],
+		styleProperties: {},
+	},
+});
 ```
 
 **Input**
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `content` | `object` | No | Universal layout content - the section structure |
-| `name` | `string` | No | Universal layout name |
+| `content` | `object` | Yes | Universal layout content - the section structure |
+| `name` | `string` | Yes | Universal layout name |
 
 <AccordionGroup>
 <Accordion title="content full type">
@@ -91148,7 +91223,7 @@ await corsair.omnisend.api.universalLayouts.create({});
     recencyMonths?: number,
     type?: string
   },
-  rows?: {
+  rows: {
     columns?: {
       blocks?: {
         button?: {
@@ -91762,7 +91837,7 @@ await corsair.omnisend.api.universalLayouts.create({});
     sideBySideProductLayout?: string,
     universalLayoutID?: string
   },
-  styleProperties?: {
+  styleProperties: {
     alignment?: string,
     backgroundColor?: string,
     backgroundImageID?: string,
@@ -93991,12 +94066,19 @@ await corsair.omnisend.api.universalLayouts.list({});
 
 `universalLayouts.replace`
 
-Update universal layout. With this endpoint you can update (fully replace) a universal layout by ID.
+Update universal layout. With this endpoint you can update (fully replace) a universal layout by ID. content is one section: rows (columns of blocks) and styleProperties.
 
 **Risk:** `write`
 
 ```ts
-await corsair.omnisend.api.universalLayouts.replace({ id: '6650a1b2c3d4e5f6a7b8c9d0' });
+await corsair.omnisend.api.universalLayouts.replace({
+	id: '6650a1b2c3d4e5f6a7b8c9d0',
+	name: 'Spring sale',
+	content: {
+		rows: [{}],
+		styleProperties: {},
+	},
+});
 ```
 
 **Input**
@@ -94004,8 +94086,8 @@ await corsair.omnisend.api.universalLayouts.replace({ id: '6650a1b2c3d4e5f6a7b8c
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `id` | `string` | Yes | Universal Layout ID (24 character hexadecimal) |
-| `content` | `object` | No | Universal layout content - the section structure |
-| `name` | `string` | No | Universal layout name |
+| `content` | `object` | Yes | Universal layout content - the section structure |
+| `name` | `string` | Yes | Universal layout name |
 
 <AccordionGroup>
 <Accordion title="content full type">
@@ -94024,7 +94106,7 @@ await corsair.omnisend.api.universalLayouts.replace({ id: '6650a1b2c3d4e5f6a7b8c
     recencyMonths?: number,
     type?: string
   },
-  rows?: {
+  rows: {
     columns?: {
       blocks?: {
         button?: {
@@ -94638,7 +94720,7 @@ await corsair.omnisend.api.universalLayouts.replace({ id: '6650a1b2c3d4e5f6a7b8c
     sideBySideProductLayout?: string,
     universalLayoutID?: string
   },
-  styleProperties?: {
+  styleProperties: {
     alignment?: string,
     backgroundColor?: string,
     backgroundImageID?: string,

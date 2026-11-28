@@ -38,7 +38,7 @@ pnpm add @corsair-dev/omnisend
 | `brands.getCurrent` | `omnisend.api.brands.getCurrent` | `read` | Get information about brand. With this endpoint you can get brand's information. |
 | `campaigns.cancel` | `omnisend.api.campaigns.cancel` | `write` | Cancel a scheduled, paused or started-email campaign; sent campaigns cannot be canceled. |
 | `campaigns.copy` | `omnisend.api.campaigns.copy` | `write` | Duplicate a campaign as a new draft. |
-| `campaigns.create` | `omnisend.api.campaigns.create` | `write` | Create a campaign; a regular email campaign needs a template id, and creating with no verified sender answers 422. |
+| `campaigns.create` | `omnisend.api.campaigns.create` | `write` | Create a draft campaign. A regular email campaign needs content.email.templateID and senderName (Omnisend answers 400 without them), and creating with no verified sender answers 422. |
 | `campaigns.delete` | `omnisend.api.campaigns.delete` | `destructive` | Delete a campaign; it cannot be restored. |
 | `campaigns.get` | `omnisend.api.campaigns.get` | `read` | Read one campaign by id, with its content and sending settings. |
 | `campaigns.getUtm` | `omnisend.api.campaigns.getUtm` | `read` | Read the UTM tags stamped on a campaign links. |
@@ -108,18 +108,18 @@ pnpm add @corsair-dev/omnisend
 | `segments.getStatistics` | `omnisend.api.segments.getStatistics` | `read` | Get segment statistics. Returns statistics for a segment, including the total number of matching contacts. Returns 409 Conflict (segment-building) while the segment is building; retry once it is ready. |
 | `segments.list` | `omnisend.api.segments.list` | `read` | List segments. List segments with sorting and cursor-based pagination support. |
 | `segments.replace` | `omnisend.api.segments.replace` | `write` | Update segment. Updates an existing segment by ID. The segment must not be in a building state to be updated. If the segment is currently being built, a 409 Conflict error is returned. |
-| `templates.create` | `omnisend.api.templates.create` | `write` | Create an email template with a name and editor sections. |
+| `templates.create` | `omnisend.api.templates.create` | `write` | Create an email template. Omnisend requires name, generalSettings (with its 3 default button presets and 5 default text presets) and at least one section. Simplest: templates.importFromHtml, or copy generalSettings and sections from templates.get of an existing template. |
 | `templates.delete` | `omnisend.api.templates.delete` | `destructive` | Delete an email template. |
 | `templates.get` | `omnisend.api.templates.get` | `read` | Read one email template by id, with its sections and styles. |
 | `templates.importFromHtml` | `omnisend.api.templates.importFromHtml` | `write` | Import raw HTML, up to 1 MB, as a new email template Omnisend converts to editor sections. |
 | `templates.list` | `omnisend.api.templates.list` | `read` | Page the email templates, filtered by name. |
 | `templates.render` | `omnisend.api.templates.render` | `read` | Render a template to its HTML for preview; nothing is sent and no state changes. |
-| `templates.replace` | `omnisend.api.templates.replace` | `write` | Replace an email template in full; omitted fields drop to their defaults. |
-| `universalLayouts.create` | `omnisend.api.universalLayouts.create` | `write` | Create universal layout. With this endpoint you can create a new universal layout. |
+| `templates.replace` | `omnisend.api.templates.replace` | `write` | Replace an email template in full; omitted fields drop to their defaults. Takes the same full body as templates.create. |
+| `universalLayouts.create` | `omnisend.api.universalLayouts.create` | `write` | Create universal layout. With this endpoint you can create a new universal layout. content is one section: rows (columns of blocks) and styleProperties; copy one from templates.get to start. |
 | `universalLayouts.delete` | `omnisend.api.universalLayouts.delete` | `destructive` | Delete universal layout. With this endpoint you can delete a universal layout by ID. Cannot be undone. |
 | `universalLayouts.get` | `omnisend.api.universalLayouts.get` | `read` | Get universal layout. With this endpoint you can get a universal layout by ID. |
 | `universalLayouts.list` | `omnisend.api.universalLayouts.list` | `read` | Get universal layouts. With this endpoint you can get a paginated list of universal layouts. Sorting: Items are returned in descending order by creation time (newest first). This is based on the internal document ID which contains a timestamp. |
-| `universalLayouts.replace` | `omnisend.api.universalLayouts.replace` | `write` | Update universal layout. With this endpoint you can update (fully replace) a universal layout by ID. |
+| `universalLayouts.replace` | `omnisend.api.universalLayouts.replace` | `write` | Update universal layout. With this endpoint you can update (fully replace) a universal layout by ID. content is one section: rows (columns of blocks) and styleProperties. |
 
 ## Auth
 

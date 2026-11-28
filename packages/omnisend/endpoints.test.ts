@@ -447,6 +447,28 @@ describe('errors', () => {
 				detail: [{ loc: ['body', 'name'], msg: 'field required' }],
 			}),
 		).toBe('Omnisend 422: name: field required');
+		// Omnisend's problem+json validation body, as seen live.
+		expect(
+			omnisendErrorMessage(400, 'Bad Request', {
+				type: 'https://problems.omnisend.com/validation-failed',
+				title: 'Validation failed',
+				detail: 'One or more fields are invalid.',
+				errors: [
+					{
+						field: 'sections',
+						code: 'required',
+						message: 'sections is a required field',
+					},
+					{
+						field: 'content.email.senderName',
+						code: 'required',
+						message: 'senderName is a required field',
+					},
+				],
+			}),
+		).toBe(
+			'Omnisend 400: One or more fields are invalid. sections is a required field; content.email.senderName: senderName is a required field',
+		);
 		expect(omnisendErrorMessage(502, 'Bad Gateway', '<html></html>')).toBe(
 			'Omnisend 502: Bad Gateway',
 		);

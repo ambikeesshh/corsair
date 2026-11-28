@@ -287,8 +287,16 @@ function textOf(value: unknown): string | undefined {
 						? entry.path
 						: Array.isArray(entry.path)
 							? entry.path.join('.')
-							: undefined;
-				return text && where ? `${where}: ${text}` : text;
+							: typeof entry.field === 'string'
+								? entry.field
+								: undefined;
+				// A message that already starts with the field's last part ("name is a required field") reads fine without it.
+				const last = where?.split('.').pop();
+				return text &&
+					where &&
+					!(last && text.startsWith(`${last} `) && where === last)
+					? `${where}: ${text}`
+					: text;
 			})
 			.filter((part): part is string => typeof part === 'string')
 			.slice(0, 5);
@@ -299,8 +307,9 @@ function textOf(value: unknown): string | undefined {
 
 /**
  * The reason in a Omnisend error body: `message`, `error` (a string or an object
- * with a message), `detail` (a string or a list of validation entries) or
- * `errors`. A bare text body counts unless it is an HTML page.
+ * with a message), `detail` (a string or a list of validation entries) and
+ * `errors` (entries with a `field` or `loc`), joined. A bare text body counts
+ * unless it is an HTML page.
  */
 // `unknown` because the body is untrusted provider JSON or text.
 export function omnisendErrorMessage(
@@ -313,11 +322,14 @@ export function omnisendErrorMessage(
 			? // `unknown` because an error body's fields are narrowed one by one below.
 				(body as Record<string, unknown>)
 			: {};
+	// A problem+json body (`detail` "One or more fields are invalid." plus `errors`) needs both to be useful.
+	const problem = [textOf(fields.detail), textOf(fields.errors)]
+		.filter((part): part is string => typeof part === 'string')
+		.join(' ');
 	let reason =
 		textOf(fields.message) ??
 		textOf(fields.error) ??
-		textOf(fields.detail) ??
-		textOf(fields.errors) ??
+		(problem || undefined) ??
 		textOf(fields.details);
 	if (!reason && typeof body === 'string') {
 		const text = body.trim();

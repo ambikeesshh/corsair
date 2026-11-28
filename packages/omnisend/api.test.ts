@@ -73,8 +73,17 @@ async function step(
 	}
 }
 
+async function segmentReady(segmentID: string): Promise<void> {
+	for (let i = 0; i < 20; i++) {
+		const out = await step('segments.get', { segmentID });
+		if (out?.status !== 'building') return;
+		await new Promise((resolve) => setTimeout(resolve, 3000));
+	}
+}
+
 describeIfKey('Omnisend live run', () => {
 	afterAll(async () => {
+		if (ids.segment) await segmentReady(ids.segment).catch(() => undefined);
 		// Clean up whatever the run made, even when a step failed.
 		const cleanup: [string, Json][] = [
 			['campaigns.delete', { id: ids.campaign }],
@@ -195,20 +204,42 @@ describeIfKey('Omnisend live run', () => {
 				ids.importedTemplate = String(out.id ?? out.templateID ?? '');
 			},
 		);
-		await step('templates.create', { name: `${RUN} template` }, (out) => {
-			ids.template = String(out.id ?? out.templateID ?? '');
-		});
+		// Omnisend wants full generalSettings and at least one section: copy them
+		// from the imported template.
+		const imported = ids.importedTemplate
+			? await step('templates.get', { id: ids.importedTemplate })
+			: undefined;
+		const sections = imported?.sections as Json[] | undefined;
+		await step(
+			'templates.create',
+			{
+				name: `${RUN} template`,
+				generalSettings: imported?.generalSettings,
+				sections,
+			},
+			(out) => {
+				ids.template = String(out.id ?? out.templateID ?? '');
+			},
+		);
 		if (ids.template) {
 			await step('templates.get', { id: ids.template });
 			await step('templates.render', { id: ids.template });
 		}
-		await step('universalLayouts.create', { name: `${RUN} layout` }, (out) => {
-			ids.layout = String(out.id ?? '');
-		});
+		await step(
+			'universalLayouts.create',
+			{ name: `${RUN} layout`, content: sections?.[0] },
+			(out) => {
+				ids.layout = String(out.id ?? '');
+			},
+		);
 		if (ids.layout) await step('universalLayouts.get', { id: ids.layout });
 		await step(
 			'images.uploadFromUrl',
-			{ url: 'https://corsair.dev/favicon.ico', name: `${RUN}.ico` },
+			// Omnisend takes PNG/JPEG/GIF only (an .ico answers 400): Corsair's GitHub avatar.
+			{
+				url: 'https://avatars.githubusercontent.com/u/238079011',
+				name: `${RUN}.png`,
+			},
 			(out) => {
 				ids.image = String(out.id ?? out.imageID ?? '');
 			},
@@ -240,7 +271,8 @@ describeIfKey('Omnisend live run', () => {
 			},
 		);
 		if (ids.segment) {
-			await step('segments.get', { segmentID: ids.segment });
+			// A new segment builds for a few seconds; statistics and delete answer 409 until it's ready.
+			await segmentReady(ids.segment);
 			await step('segments.getStatistics', { segmentID: ids.segment });
 		}
 		await step(
@@ -252,6 +284,7 @@ describeIfKey('Omnisend live run', () => {
 				content: {
 					email: {
 						subject: 'Corsair live run',
+						senderName: 'Corsair plugin tests',
 						templateID: ids.importedTemplate,
 					},
 				},
