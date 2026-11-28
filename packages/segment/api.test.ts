@@ -13,8 +13,10 @@ import type { SegmentContext } from './index';
  *
  * SEGMENT_PUBLIC_API_TOKEN (Team or Business plan) runs the workspace reads
  * and a label + source round trip (both deleted again). SEGMENT_WRITE_KEY
- * sends identify, track, page and batch calls to that source: use a test
- * source with no destinations connected. Optional: SEGMENT_LIVE_REPORT=<file>
+ * sends identify, track, page, screen, group, alias and batch calls to that
+ * source for a user id starting corsair-plugin-test-: use a test source with
+ * no destinations connected. Segment answers 200 for any write key, so check
+ * the source's debugger to see the events arrive. Optional: SEGMENT_LIVE_REPORT=<file>
  * writes each step's outcome as JSON.
  */
 const token = process.env.SEGMENT_PUBLIC_API_TOKEN?.trim() || undefined;
@@ -177,7 +179,7 @@ describeIfToken('Segment Public API (live)', () => {
 
 describeIfWriteKey('Segment Tracking API (live)', () => {
 	jest.setTimeout(60_000);
-	const userId = `corsair-live-${STAMP}`;
+	const userId = `corsair-plugin-test-${STAMP}`;
 
 	it('sends identify, track, page, screen, group, alias and batch calls', async () => {
 		expect(
@@ -194,10 +196,13 @@ describeIfWriteKey('Segment Tracking API (live)', () => {
 		await run('tracking.screen', { userId, name: 'Corsair live test' });
 		await run('tracking.group', {
 			userId,
-			groupId: `corsair-${STAMP}`,
+			groupId: `corsair-plugin-test-group-${STAMP}`,
 			traits: { name: 'Corsair test' },
 		});
-		await run('tracking.alias', { userId, previousId: `anon-${STAMP}` });
+		await run('tracking.alias', {
+			userId,
+			previousId: `corsair-plugin-test-anon-${STAMP}`,
+		});
 		await run('tracking.batch', {
 			batch: [
 				{ type: 'track', userId, event: 'Corsair Batch One' },
