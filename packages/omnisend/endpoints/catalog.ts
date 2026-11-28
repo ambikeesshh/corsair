@@ -278,12 +278,12 @@ export const omnisendEndpointMeta = {
 	'analytics.generateReport': {
 		riskLevel: 'read',
 		description:
-			'Generate report. Returns aggregated marketing analytics grouped by message send date. Covers delivery, engagement, and revenue attribution metrics for campaigns and automations. Supports optional dimensions (timestamp, channel, activity), filters, and up to 4 queries per request.',
+			'Generate report. Returns aggregated marketing analytics grouped by message send date. Covers delivery, engagement, and revenue attribution metrics for campaigns and automations. Supports optional dimensions (timestamp, channel, activity), filters, and up to 4 queries per request. Limited to 10 calls a minute and 55 a day per brand; a 429 comes back as is, without retries.',
 	},
 	'analytics.generateStatistics': {
 		riskLevel: 'read',
 		description:
-			'Generate report. Returns aggregated marketing analytics grouped by event date (when opens, clicks, orders actually occurred). Covers delivery, engagement, revenue attribution, and audience growth metrics. Requires a timestamp dimension.',
+			'Generate report. Returns aggregated marketing analytics grouped by event date (when opens, clicks, orders actually occurred). Covers delivery, engagement, revenue attribution, and audience growth metrics. Requires a timestamp dimension. Limited to 10 calls a minute and 55 a day per brand; a 429 comes back as is, without retries.',
 	},
 	'automations.copy': {
 		riskLevel: 'write',
